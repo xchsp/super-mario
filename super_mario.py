@@ -17,6 +17,7 @@ def run_game():
     pygame.mixer.init()
     #pygame.mixer_music.load("resources/sounds/background.mp3")
     #pygame.mixer_music.play(-1)
+
     pygame.init()
     pygame.display.set_caption("Super Mario")
     settings = Settings()
@@ -25,11 +26,11 @@ def run_game():
 
     # Other objects
     mario = Mario(settings, screen, "resources/mario.json")
-    level = Level(settings, screen, "resources/w1_2.json")
+    level = Level(settings, screen, "resources/w1_1.json")
 
     # Game loop
     while True:
-        game_methods.on_event(mario)
+        game_methods.on_event(mario, level)
         game_methods.on_update(level, mario)
         game_methods.on_draw(level, mario)
         pygame.display.flip()

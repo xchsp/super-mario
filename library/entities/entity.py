@@ -7,7 +7,6 @@ from pygame.sprite import Sprite
 
 class Entity(Sprite):
     """Any object that moves and collides with terrain."""
-
     def __init__(self, settings, screen, position, data=None, direction=-1, death_delay=250):
         super().__init__()
         self.scroll_rate = settings.scroll_rate
@@ -25,6 +24,7 @@ class Entity(Sprite):
         self.death_image = self.death_time = None
         self.death_delay = death_delay
         self.is_dead = False
+        self.hit = False
 
     def init_image(self, image):
         """Called on constructor to initialize self.image and self.rect."""
@@ -32,12 +32,24 @@ class Entity(Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = self.position
 
+
+    def init_mario_image(self, image):
+        """changes mario states without changing position"""
+        self.image = image
+        temp = self.rect.bottomright
+        self.rect = self.image.get_rect()
+        self.rect.bottomright = temp
+
     def set_image(self, image):
         """Updates the image that should be drawn."""
         self.image = image if self.direction == 1 else pygame.transform.flip(image, True, False)
 
+
     def fall(self):
         self.velocity.y += self.gravity
+
+    def hit_sequence(self):
+        self.hit = True
 
     def on_horizontal_collision(self):
         pass
@@ -72,7 +84,6 @@ class Entity(Sprite):
             self.fall()
 
     def is_visible(self):
-        """Has scrolled into view from the right."""
         return self.rect.x < self.screen_rect.width
 
     def update(self, level, scrolling):
@@ -113,3 +124,4 @@ class Entity(Sprite):
     def out_of_bounds(self):
         """Sprite is to left of screen."""
         return self.rect.right <= 0
+

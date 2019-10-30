@@ -5,7 +5,7 @@ from pygame.sprite import Sprite
 class Terrain(Sprite):
     """Can be collided with to stop movement."""
 
-    def __init__(self, settings, screen, image_name, position):
+    def __init__(self, settings, screen, image_name, position, re_entry):
         super().__init__()
         self.scroll_rate = settings.scroll_rate
         self.screen = screen
@@ -13,6 +13,10 @@ class Terrain(Sprite):
         self.image = pygame.image.load(image_name).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.topleft = position
+        self.rect.x -= re_entry
+
+    def scroll(self):
+        self.rect.x += self.scroll_rate
 
     def is_visible(self):
         """Has scrolled into view from the right."""

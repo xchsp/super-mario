@@ -1,5 +1,5 @@
 import pygame
-from pygame.sprite import Sprite
+
 from library.entities.entity import Entity
 
 
@@ -22,22 +22,19 @@ class FireBullet(Entity):
     def movement(self, level):
         if self.rect.bottom >= 575:
             pass
-           # self.height = 4
 
         if self.height > 0:
-            f = ( 0.5 * self.mass * (self.height**2))
+            f = (0.5 * self.mass * (self.height**2))
 
         else:
-            f = -( 0.5 * self.mass * (self.height**2))
+            f = -(0.5 * self.mass * (self.height**2))
 
-        # TODO: FIX
         try:
             self.rect.y -= f
         except TypeError:
             print('Error: ', f)
 
         self.height -= .5
-        
 
         if self.direction:
             self.rect.x += self.x_velocity
@@ -55,10 +52,7 @@ class FireBullet(Entity):
         return False
 
     def handle_horizontal_collision(self, level):
-        """Called after updating x-position."""
-        collisions = pygame.sprite.spritecollide(self, level.terrain, False)
-        for collision in collisions:
-            pass
+        pass
 
     def handle_vertical_collision(self, level):
         """Called after updating y-position."""
@@ -67,15 +61,10 @@ class FireBullet(Entity):
             self.height = 4
         self.movement(level)
 
-
     def draw(self):
-        #pygame.draw.rect(self.surface, self.color, self.rect)
         self.surface.blit(self.image, self.rect)
 
-    def update(self, level, scrolling):
+    def update(self, level, scrolling, vel_x=None):
         if scrolling:
             self.rect.x += self.velocity.x
-        # Sprite is out of screen, remove it
-
         self.handle_vertical_collision(level)
-        

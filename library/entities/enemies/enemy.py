@@ -13,6 +13,7 @@ class Enemy(Entity):
         self.walk_animation = self.load_walk_animation(animation_speed)
         super().init_image(self.walk_animation.get_image())
         self.gravity = settings.gravity * 0.1
+        self.hit_image = None
 
     def load_walk_animation(self, wait):
         animation = []

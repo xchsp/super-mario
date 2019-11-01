@@ -1,6 +1,7 @@
 import pygame
-from library.timer import Timer
+
 from library.items.item import Item
+from library.timer import Timer
 
 
 class Coin(Item):

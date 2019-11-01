@@ -1,7 +1,7 @@
 import pygame
 
 
-class Lifes:
+class Lives:
 
     def __init__(self, screen):
         self.screen = screen
@@ -28,4 +28,3 @@ class Lifes:
 
         self.screen.blit(self.life_header, self.life_header_rect)
         self.screen.blit(text, text_rect)
-

@@ -1,6 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
 
+
 class Coin(Sprite):
     def __init__(self, screen):
         super(Coin, self).__init__()

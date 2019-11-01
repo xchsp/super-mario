@@ -3,7 +3,7 @@ from library.collidables.terrain import Terrain
 
 
 class Pipe(Terrain):
-    """Can be collided with to stop movement."""
+    """Can be entered."""
 
     def __init__(self, settings, screen, image_name, position, enter, re_entry):
         super().__init__(settings, screen, image_name, position, re_entry)

@@ -2,7 +2,7 @@ from library.collidables.terrain import Terrain
 
 
 class FlagPole(Terrain):
-    """Does absolutely nothing."""
+    """End-game flag pole."""
 
     def __init__(self, settings, screen, position, re_entry, level, mario):
         super().__init__(settings, screen, "resources/images/flag_pole.png", position, re_entry)

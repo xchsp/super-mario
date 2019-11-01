@@ -125,4 +125,3 @@ class Entity(Sprite):
     def out_of_bounds(self):
         """Sprite is to left of screen."""
         return self.rect.right <= 0
-

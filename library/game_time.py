@@ -32,4 +32,3 @@ class GameTime:
 
         self.screen.blit(self.time_header, self.time_header_rect)
         self.screen.blit(text, text_rect)
-

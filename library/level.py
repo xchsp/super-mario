@@ -28,6 +28,7 @@ class Level:
         self.exit_pipe = None
         self.mario = mario
         self.castle_layer = None
+        self.pipe_group = None
 
         # Load data
         with open(data) as data_f:
@@ -92,7 +93,8 @@ class Level:
         # Castle top layer
         if self.data["castle"]["image"] == "resources/images/castle.png":
             position = self.data["castle"]["position"]
-            self.castle_layer = Terrain(self.settings, self.screen, "resources/images/castle1.png", position, self.re_entry)
+            self.castle_layer = Terrain(
+                self.settings, self.screen, "resources/images/castle1.png", position, self.re_entry)
             self.castle_layer.rect.x += 116
             terrain.add(self.castle_layer)
 

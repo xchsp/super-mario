@@ -6,6 +6,7 @@ from pygame.sprite import Group
 from library.entities.entity import Entity
 from library.entities.fireball import Fireball
 from library.timer import Timer
+from library.items.coin import Coin
 
 iterator = cycle(range(10))
 
@@ -14,21 +15,60 @@ def now():
     return pygame.time.get_ticks()
 
 
+def play_sound(sound):
+    pygame.mixer.Channel(1).stop()
+    pygame.mixer.Channel(1).play(sound)
+
+
+def load_bigger_animation():
+    animation = []
+    small_image = pygame.image.load("resources/images/s_mw1.png").convert_alpha()
+    scale = small_image.get_rect().width, small_image.get_rect().height + 5
+    medium_image = pygame.transform.scale(small_image, scale).convert_alpha()
+    scale = small_image.get_rect().width, small_image.get_rect().height + 10
+    big_image = pygame.transform.scale(small_image, scale).convert_alpha()
+    bigger_image = pygame.image.load("resources/images/mw1.png").convert_alpha()
+    animation.append(medium_image)
+    animation.append(big_image)
+    animation.append(bigger_image)
+    animation.append(big_image)
+    animation.append(medium_image)
+    animation.append(small_image)
+    animation.append(medium_image)
+    animation.append(big_image)
+    animation.append(bigger_image)
+    return Timer(animation, wait=80, loop_once=True)
+
+
+def load_fire_animation():
+    animation = []
+    normal_image = pygame.image.load("resources/images/mw1.png").convert_alpha()
+    fire_image = pygame.image.load("resources/images/fm1.png").convert_alpha()
+    for i in range(4):
+        animation.append(fire_image)
+        animation.append(normal_image)
+    animation.append(fire_image)
+    return Timer(animation, wait=80, loop_once=True)
+
+
 class Mario(Entity):
     """The playable character, Mario."""
 
     def __init__(self, settings, screen, data, player_score, game_time, lifes):
-        super().__init__(settings, screen, (100, 200), data, 1)
+        super().__init__(settings, screen, (100, 525), data, 1)
         self.settings = settings
         self.velocity.x = -settings.scroll_rate
         self.player_score = player_score
         self.game_time = game_time
         self.lifes = lifes
         self.state = "small"
+        # Will be initialized later
+        self.walk_animation = self.run_animation = None
+        self.still_image = self.jump_image = self.hit_image = self.crouch_image = None
         super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
         self.load_state()
-        self.bigger_animation = self.load_bigger_animation()
-        self.fire_animation = self.load_fire_animation()
+        self.bigger_animation = load_bigger_animation()
+        self.fire_animation = load_fire_animation()
         self.pole_slide_image = pygame.image.load("resources/images/m_pole.png").convert_alpha()
         self.fire_pole_slide_image = pygame.image.load("resources/images/m_fpole.png").convert_alpha()
         self.throw_image = pygame.image.load("resources/images/m_throw.png").convert_alpha()
@@ -47,6 +87,7 @@ class Mario(Entity):
         self.pipe_side = False
 
         # Sounds
+        self.coin_sound = pygame.mixer.Sound("resources/sounds/coin.wav")
         self.enemy_kill_sound = pygame.mixer.Sound("resources/sounds/enemy_killed.wav")
         self.fireball_sound = pygame.mixer.Sound("resources/sounds/fireball.wav")
         self.powerup_sound = pygame.mixer.Sound("resources/sounds/powerup.wav")
@@ -89,38 +130,9 @@ class Mario(Entity):
             animation.append(pygame.image.load(self.data[self.state]["walking"]["sequence"][x]).convert_alpha())
         return Timer(animation, wait=animation_speed)
 
-    def load_bigger_animation(self):
-        animation = []
-        small_image = pygame.image.load("resources/images/s_mw1.png").convert_alpha()
-        scale = small_image.get_rect().width, small_image.get_rect().height + 5
-        medium_image = pygame.transform.scale(small_image, scale).convert_alpha()
-        scale = small_image.get_rect().width, small_image.get_rect().height + 10
-        big_image = pygame.transform.scale(small_image, scale).convert_alpha()
-        bigger_image = pygame.image.load("resources/images/mw1.png").convert_alpha()
-        animation.append(medium_image)
-        animation.append(big_image)
-        animation.append(bigger_image)
-        animation.append(big_image)
-        animation.append(medium_image)
-        animation.append(small_image)
-        animation.append(medium_image)
-        animation.append(big_image)
-        animation.append(bigger_image)
-        return Timer(animation, wait=80, loop_once=True)
-
-    def load_fire_animation(self):
-        animation = []
-        normal_image = pygame.image.load("resources/images/mw1.png").convert_alpha()
-        fire_image = pygame.image.load("resources/images/fm1.png").convert_alpha()
-        for i in range(4):
-            animation.append(fire_image)
-            animation.append(normal_image)
-        animation.append(fire_image)
-        return Timer(animation, wait=80, loop_once=True)
-
     def throw_fireball(self):
         fireball = Fireball(self.settings, self.screen, self.rect.center, self.direction)
-        self.play_sound(self.fireball_sound)
+        play_sound(self.fireball_sound)
         self.fireballs.add(fireball)
         self.throw_time = now()
 
@@ -175,7 +187,7 @@ class Mario(Entity):
                         if collision.has_item != 0:
                             collision.show_item(self)
                         elif collision.has_item is 0 and self.state is not "small" and collision.type is "brick":
-                            self.play_sound(self.brick_break_sound)
+                            play_sound(self.brick_break_sound)
                             collision.kill()
                     except AttributeError:
                         pass
@@ -201,7 +213,7 @@ class Mario(Entity):
                 collisions = pygame.sprite.spritecollide(bullet, level.enemies, False)
                 for collision in collisions:
                     if not collision.hit:
-                        self.play_sound(self.enemy_kill_sound)
+                        play_sound(self.enemy_kill_sound)
                         collision.hit_sequence()
                         bullet.hit_sequence()
             bullet.update(level, self.is_scrolling, vel_x)
@@ -209,7 +221,7 @@ class Mario(Entity):
     def check_pipe(self):
         """Checks if it is an underground pipe."""
         if self.pipe_entrance:
-            self.play_sound(self.pipe_sound)
+            play_sound(self.pipe_sound)
             self.moving_left = False
             self.moving_right = False
             self.pipe_down = True
@@ -219,12 +231,11 @@ class Mario(Entity):
     def check_pipe_exit(self, level):
         """Checks if it is an underground pipe."""
         if pygame.sprite.collide_rect(self, level.exit_pipe):
-            self.play_sound(self.pipe_sound)
+            play_sound(self.pipe_sound)
             self.moving_left = False
             self.moving_right = False
             self.pipe_side = True
             self.pipe_exit = False
-            self.underground = False
 
     def update(self, level, scrolling=None, vel_x=None):
         if self.game_time.seconds <= 0 and not self.dead:
@@ -239,7 +250,11 @@ class Mario(Entity):
                 self.dead = False
                 self.game_time.seconds = 350
 
-                if self.level_2:
+                if self.lifes.lifes == 0:
+                    self.lifes.lifes = 3
+                    level.load("resources/w1_1.json")
+                    self.level_2 = False
+                elif self.level_2:
                     level.load("resources/w1_2.json")
                 else:
                     level.load("resources/w1_1.json")
@@ -286,8 +301,9 @@ class Mario(Entity):
             if self.rect.x >= 900:
                 self.pipe_side = False
                 self.pipe_up = True
+                self.underground = False
                 self.position = (25, level.go_surface() + 80)
-                self.play_sound(self.pipe_sound)
+                play_sound(self.pipe_sound)
                 super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
         # Coming out of pipe animation
         elif self.pipe_up:
@@ -343,7 +359,7 @@ class Mario(Entity):
             if not collision.hit:
                 # Jumping on enemy
                 if self.invincible or (self.rect.bottom <= collision.rect.centery):
-                    self.play_sound(self.enemy_kill_sound)
+                    play_sound(self.enemy_kill_sound)
                     collision.hit_sequence()
                     if collision.type == "koopa":
                         self.player_score.koopa_hit()
@@ -363,29 +379,26 @@ class Mario(Entity):
                             pygame.mixer.music.play()
                             self.died()
                         else:
-                            self.play_sound(self.pipe_sound)
+                            play_sound(self.pipe_sound)
                             self.hit_sequence()
                             self.go_down_state()
 
     def check_item_collisions(self, level):
-        """Detect if jumped on enemy"""
+        """Detect if touched power-up."""
         collisions = pygame.sprite.spritecollide(self, level.items, True)
         for collision in collisions:
             if collision.item_type == 1:
+                play_sound(self.coin_sound)
                 self.player_score.coin_hit(self)
             if collision.item_type == 2:
-                self.play_sound(self.powerup_sound)
+                play_sound(self.powerup_sound)
                 self.get_bigger()
             if collision.item_type == 3:
-                self.play_sound(self.powerup_sound)
+                play_sound(self.powerup_sound)
                 self.get_fire()
             if collision.item_type == 4:
-                self.play_sound(self.powerup_sound)
+                play_sound(self.powerup_sound)
                 self.get_star()
-
-    def play_sound(self, sound):
-        pygame.mixer.Channel(1).stop()
-        pygame.mixer.Channel(1).play(sound)
 
     def get_bigger(self):
         self.player_score.mushroom_hit()
@@ -552,7 +565,6 @@ class Mario(Entity):
         self.dead = True
         self.lifes.lifes -= 1
         if self.lifes.lifes == 0:
-            self.lifes.lifes = 3
             self.player_score.score = 0
             self.game_time.seconds = 350
         self.death_time = now()

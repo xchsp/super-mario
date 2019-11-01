@@ -4,11 +4,11 @@ import pygame
 from pygame.locals import *
 
 
-def on_event(mario, level, SECOND, game_time, settings):
+def on_event(mario, level, second, game_time, settings):
     """Handles Pygame events."""
     for event in pygame.event.get():
         if not mario.settings.level_over:
-            if event.type == SECOND:
+            if event.type == second:
                 game_time.update()
             if event.type == KEYDOWN:
                 on_key_down(event, mario, level, settings)

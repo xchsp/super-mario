@@ -6,13 +6,13 @@ from library.timer import Timer
 
 class Coin(Item):
 
-    def __init__(self, settings, surface, position, underground=False):
-        super().__init__(settings, surface, position, "resources/images/coin.png")
+    def __init__(self, settings, surface, position, floating=False):
+        super().__init__(settings, surface, position, "resources/images/coin_1.png")
         self.item_type = 1
         self.y_limit = 30
-        self.underground = underground
-        self.spin_animation = Timer([pygame.image.load("resources/images/coin.png"),
-                                     pygame.image.load("resources/images/coin_2.png")])
+        self.floating = floating
+        images = [pygame.image.load("resources/images/coin_" + str(x) + ".png") for x in range(1, 5)]
+        self.spin_animation = Timer(images)
 
     def update(self, level, scrolling, vel_x=None):
         """Pops out and remains still."""
@@ -21,7 +21,7 @@ class Coin(Item):
                 self.rect.x += vel_x
             else:
                 self.rect.x += self.scroll_rate
-        if not self.underground:
+        if not self.floating:
             self.rect.y += self.velocity.y
             if self.rect.bottom >= self.position[1]:
                 self.rect.bottom = self.position[1]
@@ -29,7 +29,7 @@ class Coin(Item):
 
     def draw(self):
         super().set_image(self.spin_animation.get_image())
-        if not self.underground:
+        if not self.floating:
             self.y_limit -= 2
             if self.y_limit < 0:
                 self.kill()

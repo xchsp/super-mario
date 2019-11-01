@@ -1,6 +1,6 @@
 import pygame
 
-from library.items.item import Item
+from library.entities.items.item import Item
 from library.timer import Timer
 
 

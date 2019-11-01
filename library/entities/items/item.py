@@ -17,8 +17,3 @@ class Item(Entity):
         self.velocity.y = -10  # Small bounce when item pops out
         self.gravity = settings.gravity / 2
         self.rect.y -= 10  # So Mario doesn't immediately touch item upon block hit
-
-    def update(self, level, scrolling, vel_x=None):
-        super().update(level, scrolling, vel_x)
-        if self.velocity.y >= 0:
-            self.is_active = True

@@ -4,9 +4,8 @@ import pygame
 from pygame.sprite import Group
 
 from library.entities.entity import Entity
-from library.entities.fireball import Fireball
+from library.entities.player.fireball import Fireball
 from library.timer import Timer
-from library.items.coin import Coin
 
 iterator = cycle(range(10))
 

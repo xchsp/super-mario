@@ -4,7 +4,7 @@
 import pygame
 
 import library.game_methods as game_methods
-from library.entities.mario import Mario
+from library.entities.player.mario import Mario
 from library.game_time import GameTime
 from library.level import Level
 from library.lives import Lives

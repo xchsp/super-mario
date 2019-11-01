@@ -12,7 +12,7 @@ from library.collidables.stairs import Stairs
 from library.entities.enemies.koopa import Koopa
 from library.entities.enemies.goomba import Goomba
 from library.background import Background
-from library.items.coin import Coin
+from library.entities.items.coin import Coin
 
 
 class Level:

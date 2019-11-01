@@ -6,7 +6,7 @@
 
     "ground" : {
         "image" : ["resources/images/w1_2g1.png", "resources/images/w1_2g2.png", "resources/images/w1_2g3.png", "resources/images/w1_2g4.png", "resources/images/w1_2g4.png", "resources/images/ceiling.png", "resources/images/wall.png"],
-        "count" : 6,
+        "count" : 7,
         "position" : [[0, 568], [4135, 568], [6050, 568], [6238, 568], [7300, 568], [282, 0], [0, -1]]
     },
 

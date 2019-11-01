@@ -66,7 +66,7 @@
 
     "castle" : {
         "image" : "resources/images/castle.png",
-        "position" : [9698, 360]
+        "position" : [9698, 361]
     },
 
     "pillar": {

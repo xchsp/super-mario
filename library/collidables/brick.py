@@ -1,8 +1,8 @@
 import pygame
 
 from library.collidables.block import Block
-from library.items.coin import Coin
-from library.items.star import Star
+from library.entities.items.coin import Coin
+from library.entities.items.star import Star
 
 
 class Brick(Block):

@@ -9,5 +9,5 @@ Antonio Guzman
 Gary Kam  
 
 ## Credits
-Sprites - https://www.spriters-resource.com/nintendo_64/pm
-Sounds - https://themushroomkingdom.net/media/smb/wav
+Sprites - https://www.spriters-resource.com/nintendo_64/pm  
+Sounds - https://themushroomkingdom.net/media/smb/wav  

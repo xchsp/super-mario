@@ -18,8 +18,6 @@ def run_game():
     # Sound initialization
     pygame.mixer.pre_init(44100, -16, 2, 512)
     pygame.mixer.init()
-    pygame.mixer.music.load("resources/sounds/background.mp3")
-    pygame.mixer.music.play(-1)
 
     # Pygame initialization
     pygame.init()

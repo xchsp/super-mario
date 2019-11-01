@@ -19,6 +19,15 @@ def play_sound(sound):
     pygame.mixer.Channel(1).play(sound)
 
 
+def play_music(music_name, loop=False):
+    pygame.mixer.music.stop()
+    pygame.mixer.music.load(music_name)
+    if loop:
+        pygame.mixer.music.play(-1)
+    else:
+        pygame.mixer.music.play()
+
+
 def load_bigger_animation():
     animation = []
     small_image = pygame.image.load("resources/images/s_mw1.png").convert_alpha()
@@ -61,31 +70,41 @@ class Mario(Entity):
         self.game_time = game_time
         self.lifes = lifes
         self.state = "small"
+        self.dead = False
+
         # Will be initialized later
         self.walk_animation = self.run_animation = None
         self.still_image = self.jump_image = self.hit_image = self.crouch_image = None
+
+        # Animated states
         super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
         self.load_state()
         self.bigger_animation = load_bigger_animation()
         self.fire_animation = load_fire_animation()
+
+        # Single-state images
         self.pole_slide_image = pygame.image.load("resources/images/m_pole.png").convert_alpha()
         self.fire_pole_slide_image = pygame.image.load("resources/images/m_fpole.png").convert_alpha()
         self.throw_image = pygame.image.load("resources/images/m_throw.png").convert_alpha()
         self.death_image = pygame.image.load("resources/images/sm_hit.png")
+
+        # Movement variables
         self.moving_left = self.moving_right = self.is_scrolling = False
         self.is_jumping = self.is_d_jumping = False
-        self.jump_sound = pygame.mixer.Sound("resources/sounds/jump.wav")
+
         self.fireballs = Group()
+
         self.throw_time = 0
         self.animation_time = 0
         self.invincible_time = 0
-        self.dead = False
+
         # True if animating going through pipe
         self.pipe_down = False
         self.pipe_up = False
         self.pipe_side = False
 
         # Sounds
+        self.jump_sound = pygame.mixer.Sound("resources/sounds/jump.wav")
         self.coin_sound = pygame.mixer.Sound("resources/sounds/coin.wav")
         self.enemy_kill_sound = pygame.mixer.Sound("resources/sounds/enemy_killed.wav")
         self.fireball_sound = pygame.mixer.Sound("resources/sounds/fireball.wav")
@@ -105,10 +124,16 @@ class Mario(Entity):
         self.crouching = False
         self.animating = False
 
-        # Horizontal movement variables
-        self.acceleration_x = 0
-        self.x_change = 0
+        # End-game variable
         self.castle_entrance_x = 778
+
+        # Music
+        self.bg_music_1 = "resources/sounds/background.mp3"
+        self.bg_music_2 = "resources/sounds/underground.mp3"
+        self.star_music = "resources/sounds/star_power.mp3"
+        self.dead_music = "resources/sounds/mario_dies.wav"
+        self.end_music = "resources/sounds/level_cleared.wav"
+        play_music(self.bg_music_1, True)
 
     def load_state(self):
         """State animations and images."""
@@ -141,13 +166,11 @@ class Mario(Entity):
             if not self.is_d_jumping:
                 self.velocity.y = -15  # Weaker double jump
                 self.is_d_jumping = True
-                pygame.mixer.Channel(1).stop()
-                pygame.mixer.Channel(1).play(self.jump_sound)
+                play_sound(self.jump_sound)
         else:
             self.velocity.y = -20  # Regular jump
             self.is_jumping = True
-            pygame.mixer.Channel(1).stop()
-            pygame.mixer.Channel(1).play(self.jump_sound)
+            play_sound(self.jump_sound)
 
     def reset_jump(self):
         """Allows Mario to perform jumps."""
@@ -239,9 +262,7 @@ class Mario(Entity):
     def update(self, level, scrolling=None, vel_x=None):
         if self.game_time.seconds <= 0 and not self.dead:
             self.died()
-            pygame.mixer.music.stop()
-            pygame.mixer.music.load("resources/sounds/mario_dies.wav")
-            pygame.mixer.music.play()
+            play_music(self.dead_music)
         # Actually moves Mario horizontally, if on left side of screen.
         # Otherwise, scroll screen to simulate movement
         if self.dead:
@@ -261,12 +282,9 @@ class Mario(Entity):
                     level.load("resources/w1_1.json")
                 self.position = (100, 0)
                 super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
-                pygame.mixer.music.load("resources/sounds/background.mp3")
-                pygame.mixer.music.play(-1)
+                play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
         elif self.rect.y > self.settings.screen_height and not self.dead:
-            pygame.mixer.music.stop()
-            pygame.mixer.music.load("resources/sounds/mario_dies.wav")
-            pygame.mixer.music.play()
+            play_music(self.dead_music)
             self.switch_bg_music = False
             self.died()
 
@@ -375,9 +393,7 @@ class Mario(Entity):
                     # Touched enemy, Mario takes damage
                     if not self.hit and not self.invincible:
                         if self.state is "small":
-                            pygame.mixer.music.stop()
-                            pygame.mixer.music.load("resources/sounds/mario_dies.wav")
-                            pygame.mixer.music.play()
+                            play_music(self.dead_music)
                             self.died()
                         else:
                             play_sound(self.pipe_sound)
@@ -419,9 +435,7 @@ class Mario(Entity):
 
     def get_star(self):
         self.player_score.star_hit()
-        pygame.mixer.music.stop()
-        pygame.mixer.music.load("resources/sounds/star_power.mp3")
-        pygame.mixer.music.play(-1)
+        play_music(self.star_music, True)
         self.invincible = True
         self.invincible_time = now()
 
@@ -445,9 +459,7 @@ class Mario(Entity):
         # Cleared level music
         if self.switch_bg_music:
             self.player_score.score += self.game_time.seconds * 2
-            pygame.mixer.music.stop()
-            pygame.mixer.music.load("resources/sounds/level_cleared.wav")
-            pygame.mixer.music.play()
+            play_music(self.end_music)
             self.switch_bg_music = False
         # Sliding down pole
         if not self.moving_right:
@@ -470,9 +482,7 @@ class Mario(Entity):
                 level.load("resources/w1_2.json")
                 self.switch_bg_music = False
                 self.level_2 = True
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load("resources/sounds/background.mp3")
-                pygame.mixer.music.play(-1)
+                play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
                 self.game_time.seconds = 350
                 self.position = (100, -300)
                 super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
@@ -553,9 +563,7 @@ class Mario(Entity):
                     return
             else:
                 self.invincible = False
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load("resources/sounds/background.mp3")
-                pygame.mixer.music.play(-1)
+                play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
         # Parent draw() actually blits the image
         super().draw()
 

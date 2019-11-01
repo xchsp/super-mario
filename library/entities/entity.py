@@ -9,6 +9,7 @@ class Entity(Sprite):
     """Any object that moves and collides with terrain."""
     def __init__(self, settings, screen, position, data=None, direction=-1, death_delay=250):
         super().__init__()
+        self.settings = settings
         self.scroll_rate = settings.scroll_rate
         self.gravity = settings.gravity
         self.velocity = Vector2()
@@ -23,7 +24,6 @@ class Entity(Sprite):
         self.image = self.rect = None
         self.death_image = self.death_time = None
         self.death_delay = death_delay
-        self.is_dead = False
         self.hit = False
 
     def init_image(self, image):
@@ -32,9 +32,8 @@ class Entity(Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = self.position
 
-
     def init_mario_image(self, image):
-        """changes mario states without changing position"""
+        """Changes mario states without changing position."""
         self.image = image
         temp = self.rect.bottomright
         self.rect = self.image.get_rect()
@@ -44,12 +43,12 @@ class Entity(Sprite):
         """Updates the image that should be drawn."""
         self.image = image if self.direction == 1 else pygame.transform.flip(image, True, False)
 
-
     def fall(self):
         self.velocity.y += self.gravity
 
     def hit_sequence(self):
         self.hit = True
+        self.death_time = pygame.time.get_ticks()
 
     def on_horizontal_collision(self):
         pass
@@ -77,6 +76,7 @@ class Entity(Sprite):
                 if self.velocity.y < 0 and self.rect.top > collision.rect.centery:
                     self.rect.top = collision.rect.bottom
                     self.on_vertical_collision()
+                    self.velocity.y = 0
                 elif self.velocity.y > 0 and self.rect.bottom < collision.rect.centery:
                     self.rect.bottom = collision.rect.top
                     self.on_vertical_collision()
@@ -86,21 +86,27 @@ class Entity(Sprite):
     def is_visible(self):
         return self.rect.x < self.screen_rect.width
 
-    def update(self, level, scrolling):
+    def update(self, level, scrolling, vel_x=None):
+        if not self.hit:
+            if vel_x:
+                self.scroll_rate = vel_x
+            else:
+                self.scroll_rate = self.settings.scroll_rate
+
         # Change x-position
         if scrolling:
             self.rect.x += self.scroll_rate
             # Sprite is left of screen, remove it
             if self.out_of_bounds():
                 self.kill()
-        if self.is_dead:
+        if self.hit:
             if self.awaited_death():
                 self.kill()
         # Slow down movement speed
-        elif self.is_visible():
+        elif self.is_visible() and not self.hit:
             self.rect.x += self.velocity.x * 0.25 * self.direction
             self.handle_horizontal_collision(level)
-        if not self.is_dead:
+        if not self.hit:
             # Change y-position.
             self.rect.y += self.velocity.y
             # Sprite is under screen, remove it
@@ -111,11 +117,6 @@ class Entity(Sprite):
     def draw(self):
         if self.is_visible():
             self.screen.blit(self.image, self.rect)
-
-    def set_dead(self):
-        """Entity is dead. Begin showing death animation."""
-        self.is_dead = True
-        self.death_time = pygame.time.get_ticks()
 
     def awaited_death(self):
         """Returns True if death animation time is over."""

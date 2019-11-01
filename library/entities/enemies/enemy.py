@@ -12,6 +12,7 @@ class Enemy(Entity):
         self.scroll_rate = settings.scroll_rate
         self.walk_animation = self.load_walk_animation(animation_speed)
         super().init_image(self.walk_animation.get_image())
+        self.gravity = settings.gravity * 0.1
 
     def load_walk_animation(self, wait):
         animation = []
@@ -25,7 +26,7 @@ class Enemy(Entity):
         
     def draw(self):
         if not self.hit:
-            super().set_image(self.walk_animation.get_image())
+            self.set_image(self.walk_animation.get_image())
         else:
-            super().set_image(self.hit_image)
+            self.set_image(self.hit_image)
         super().draw()

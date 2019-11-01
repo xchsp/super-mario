@@ -8,7 +8,7 @@ class Fireball(Entity):
 
     def __init__(self, settings, screen, position, direction):
         super().__init__(settings, screen, position, direction=direction)
-        super().init_image(pygame.image.load("resources/images/fireball.png").convert())
+        super().init_image(pygame.image.load("resources/images/fireball.png").convert_alpha())
         self.scroll_rate = settings.scroll_rate
         self.spin_animation = self.load_spin_animation()
         self.death_animation = self.load_death_animation()
@@ -20,17 +20,17 @@ class Fireball(Entity):
         """Spins while moving."""
         animation = []
         for x in range(4):
-            rotated_image = pygame.transform.rotate(self.image, 90 * x).convert()
+            rotated_image = pygame.transform.rotate(self.image, 90 * x)
             animation.append(rotated_image)
         return Timer(animation)
 
     def load_death_animation(self):
         """Shrinks when collided with terrain."""
         animation = []
-        death_image = pygame.image.load("resources/images/boom.png")
+        death_image = pygame.image.load("resources/images/boom.png").convert_alpha()
         for x in range(1, 7):
             scale = self.rect.width - 2 * x, self.rect.height - 2 * x
-            scaled_image = pygame.transform.scale(death_image, scale).convert()
+            scaled_image = pygame.transform.scale(death_image, scale).convert_alpha()
             animation.append(scaled_image)
         return Timer(animation, wait=self.death_delay/6)
 
@@ -40,7 +40,7 @@ class Fireball(Entity):
         if collisions:
             for collision in collisions:
                 if self.rect.right < collision.rect.left + 50 or self.rect.left > collision.rect.right - 50:
-                    super().set_dead()
+                    super().hit_sequence()
                     break
 
     def handle_vertical_collision(self, level):
@@ -60,8 +60,13 @@ class Fireball(Entity):
                         or collision.rect.collidepoint(self.rect.center)):
                     self.rect.bottom = collision.rect.top
 
-    def update(self, level, scrolling):
-        if self.is_dead:
+    def update(self, level, scrolling, vel_x=None):
+        if vel_x:
+            self.scroll_rate = vel_x
+        else:
+            self.scroll_rate = self.settings.scroll_rate
+
+        if self.hit:
             if scrolling:
                 self.rect.x += self.scroll_rate
                 if self.out_of_bounds():
@@ -81,7 +86,7 @@ class Fireball(Entity):
             self.handle_vertical_collision(level)
 
     def draw(self):
-        if self.is_dead:
+        if self.hit:
             super().set_image(self.death_animation.get_image())
         else:
             super().set_image(self.spin_animation.get_image())

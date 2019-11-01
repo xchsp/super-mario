@@ -1,23 +1,24 @@
 import pygame
-from pygame.sprite import Sprite
+
+from library.entities.entity import Entity
 
 
-class Item(Sprite):
+class Item(Entity):
     """"Class that handles items"""
-    def __init__(self, settings, surface, position, image):
-        super(Item, self).__init__()
-        self.is_active = True
-        self.surface = surface
+
+    def __init__(self, settings, screen, position, image_name):
+        super(Item, self).__init__(settings, screen, position)
+        self.is_active = False
+        self.settings = settings
         self.scroll_rate = settings.scroll_rate
-        self.image = pygame.image.load(image)
-        self.rect = self.image.get_rect()
+        self.screen = screen
+        self.direction = 1
+        super().init_image(pygame.image.load(image_name))
+        self.velocity.y = -10  # Small bounce when item pops out
+        self.gravity = settings.gravity / 2
+        self.rect.y -= 10  # So Mario doesn't immediately touch item upon block hit
 
-        self.rect.topleft = position
-        self.rect.y -= 50
-
-    def draw(self):
-        if self.is_active:
-            self.surface.blit(self.image, self.rect)
-
-    def scroll(self):
-        self.rect.x += self.scroll_rate
+    def update(self, level, scrolling, vel_x=None):
+        super().update(level, scrolling, vel_x)
+        if self.velocity.y >= 0:
+            self.is_active = True

@@ -251,6 +251,8 @@ class Mario(Entity):
                 self.game_time.seconds = 350
 
                 if self.lifes.lifes == 0:
+                    self.player_score.score = 0
+                    self.game_time.seconds = 350
                     self.lifes.lifes = 3
                     level.load("resources/w1_1.json")
                     self.level_2 = False
@@ -564,7 +566,4 @@ class Mario(Entity):
         self.jump()
         self.dead = True
         self.lifes.lifes -= 1
-        if self.lifes.lifes == 0:
-            self.player_score.score = 0
-            self.game_time.seconds = 350
         self.death_time = now()

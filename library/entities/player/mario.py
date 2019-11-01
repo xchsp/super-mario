@@ -260,6 +260,7 @@ class Mario(Entity):
             self.pipe_exit = False
 
     def update(self, level, scrolling=None, vel_x=None):
+        # Time ran out
         if self.game_time.seconds <= 0 and not self.dead:
             self.died()
             play_music(self.dead_music)
@@ -283,6 +284,7 @@ class Mario(Entity):
                 self.position = (100, 0)
                 super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
                 play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
+        # Fell out of screen
         elif self.rect.y > self.settings.screen_height and not self.dead:
             play_music(self.dead_music)
             self.switch_bg_music = False

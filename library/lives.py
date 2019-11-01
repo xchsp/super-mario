@@ -10,7 +10,7 @@ class Lives:
         self.life_header = self.font.render('LIVES', True, self.color)
         self.life_header_rect = self.life_header.get_rect()
         self.life_header_rect.midtop = self.screen.get_rect().topright
-        self.life_header_rect.x -= 120
+        self.life_header_rect.x -= 80
         self.lifes = 3
 
     def draw(self, undergound):

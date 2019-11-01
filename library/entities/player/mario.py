@@ -136,7 +136,6 @@ class Mario(Entity):
         self.throw_time = now()
 
     def jump(self):
-        print(self.rect.topleft)
         """Increases Mario's y-position. Must land before performing another jump."""
         if self.is_jumping:
             if not self.is_d_jumping:

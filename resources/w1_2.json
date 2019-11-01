@@ -5,9 +5,9 @@
     },
 
     "ground" : {
-        "image" : ["resources/images/w1_2g1.png", "resources/images/w1_2g2.png", "resources/images/w1_2g3.png", "resources/images/w1_2g4.png", "resources/images/ceiling.png", "resources/images/wall.png"],
+        "image" : ["resources/images/w1_2g1.png", "resources/images/w1_2g2.png", "resources/images/w1_2g3.png", "resources/images/w1_2g4.png", "resources/images/w1_2g4.png", "resources/images/ceiling.png", "resources/images/wall.png"],
         "count" : 6,
-        "position" : [[0, 568], [4135, 564], [6050, 564], [6238, 564], [282, 0], [0, -1]]
+        "position" : [[0, 568], [4135, 568], [6050, 568], [6238, 568], [7300, 568], [282, 0], [0, -1]]
     },
 
 
@@ -24,7 +24,7 @@
             [3806, 66], [3806, 115], [3853, 66], [3853, 115], [3900, 66], [3900, 115], [3947, 66], [3947, 115],
             [3806, 360], [3853, 360], [3900, 360], [3947, 360],
             [4182, 262], [4182, 311], [4229, 262], [4229, 311], [4276, 262], [4276, 311], [4323, 262], [4323, 311], [4370, 262], [4370, 311],
-            [6050, 419], [6050, 468], [6050, 517], [6097, 419], [6097, 468], [6097, 517]
+            [6050, 423], [6050, 472], [6050, 521], [6097, 423], [6097, 472], [6097, 521]
         ],
 
         "item" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -61,16 +61,12 @@
     },
 
     "down_stairs" : {
-        "count" : 0,
-        "starting" : [],
-        "rows": [],
-        "columns": []
-
+        "count" : 0
     },
 
     "up_stairs" : {
         "count" : 1,
-        "starting": [[6753, 371]],
+        "starting": [[6753, 375]],
         "rows": [4],
         "columns": [5]
     },
@@ -81,7 +77,7 @@
 
     "castle" : {
         "image" : "resources/images/disney.png",
-        "position" : [7000, 200]
+        "position" : [7400, 273]
     },
 
     "pillar" : {

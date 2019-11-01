@@ -235,7 +235,7 @@ class Mario(Entity):
         # Actually moves Mario horizontally, if on left side of screen.
         # Otherwise, scroll screen to simulate movement
         if self.dead:
-            if now() - self.death_time >= 2000:
+            if now() - self.death_time >= 2500:
                 self.dead = False
                 self.game_time.seconds = 350
 
@@ -247,12 +247,11 @@ class Mario(Entity):
                 super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
                 pygame.mixer.music.load("resources/sounds/background.mp3")
                 pygame.mixer.music.play(-1)
-        elif self.rect.y > self.settings.screen_height:
-            if self.switch_bg_music:
-                pygame.mixer.music.stop()
-                pygame.mixer.music.load(self.death_sound)
-                pygame.mixer.music.play()
-                self.switch_bg_music = False
+        elif self.rect.y > self.settings.screen_height and not self.dead:
+            pygame.mixer.music.stop()
+            pygame.mixer.music.load("resources/sounds/mario_dies.wav")
+            pygame.mixer.music.play()
+            self.switch_bg_music = False
             self.died()
 
         # Falling death movement

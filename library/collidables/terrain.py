@@ -31,12 +31,6 @@ class Terrain(Sprite):
         """Has scrolled into view from the right."""
         return self.rect.x < self.screen_rect.width
 
-    # Deprecated
-    def update(self):
-        self.rect.x += self.scroll_rate
-        if self.out_of_bounds():
-            self.kill()
-
     def draw(self):
         if self.is_visible():
             self.screen.blit(self.image, self.rect)

@@ -31,3 +31,7 @@ class Enemy(Entity):
         else:
             self.set_image(self.hit_image)
         super().draw()
+
+    def on_horizontal_collision(self):
+        """Face the opposite direction when hitting a wall."""
+        self.direction *= -1

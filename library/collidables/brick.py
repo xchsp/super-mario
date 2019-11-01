@@ -6,7 +6,7 @@ from library.entities.items.star import Star
 
 
 class Brick(Block):
-    """Bounces when hit by player."""
+    """Pops out coins when hit by player."""
 
     def __init__(self, settings, screen, position, image_name, level, re_entry, has_item):
         super(Brick, self).__init__(settings, screen, position, image_name, level, re_entry, has_item)

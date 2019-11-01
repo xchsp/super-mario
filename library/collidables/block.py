@@ -7,7 +7,7 @@ import pygame.image
 
 
 class Block(Terrain):
-    """A single, small, solid, square object.
+    """A single, small, solid, square object. Can contain an item.
     Item:
     0- Nothing
     1- Coin

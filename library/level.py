@@ -102,10 +102,6 @@ class Level:
         position = self.data["flag_pole"]
         pole = FlagPole(self.settings, self.screen, position, self.re_entry, self, self.mario)
         terrain.add(pole)
-        # Flag
-        position = self.data["flag"]
-        flag = Terrain(self.settings, self.screen, "resources/images/flag.png", position, self.re_entry)
-        terrain.add(flag)
         # Ground
         for x in range(self.data["ground"]["count"]):
             image_name = self.data["ground"]["image"][x]

@@ -419,6 +419,7 @@ class Mario(Entity):
         self.animating = True
 
     def get_star(self):
+        self.player_score.star_hit()
         pygame.mixer.music.stop()
         pygame.mixer.music.load("resources/sounds/star_power.mp3")
         pygame.mixer.music.play(-1)

@@ -7,3 +7,7 @@ A remake of [Super Mario Bros.](https://en.wikipedia.org/wiki/Super_Mario_Bros.)
 Anisha Braganza  
 Antonio Guzman  
 Gary Kam  
+
+## Credits
+Sprites - https://www.spriters-resource.com/nintendo_64/pm
+Sounds - https://themushroomkingdom.net/media/smb/wav

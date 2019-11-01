@@ -13,12 +13,13 @@ class ScoreSystem:
         self.lives = 3
         self.coin_counter = 0
 
-        # Enemy score values
-        self.coin = 10
+        # Score values
+        self.coin = 200
         self.goomba = 10
         self.koopa = 20
-        self.mushroom = 50
-        self.fire_flower = 80
+        self.mushroom = 1000
+        self.fire_flower = 1000
+        self.star = 1000
 
         # Maximum flag score
         self.flag_lower = 40
@@ -61,6 +62,9 @@ class ScoreSystem:
 
     def fire_flower_hit(self):
         self.score += self.fire_flower
+
+    def star_hit(self):
+        self.score += self.star
 
     def draw(self, underground):
         if underground:

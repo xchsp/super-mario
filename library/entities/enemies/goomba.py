@@ -9,4 +9,3 @@ class Goomba(Enemy):
     def __init__(self, settings, screen, position):
         super().__init__(settings, screen, position, "resources/goomba.json")
         self.hit_image = pygame.image.load("resources/images/gh2.png")
-        self.type = "goomba"

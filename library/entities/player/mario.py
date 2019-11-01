@@ -216,7 +216,7 @@ class Mario(Entity):
                     break
                 # Mario is falling
                 elif self.velocity.y > 0:
-                    # check if pipe is an enterence
+                    # Check if pipe is an entrance
                     try:
                         if collision.enter:
                             self.pipe_entrance = True
@@ -229,16 +229,20 @@ class Mario(Entity):
         else:
             self.fall()
 
-    def update_fire_balls(self, level, vel_x=None):
-        for bullet in self.fireballs:
-            if not bullet.hit:
-                collisions = pygame.sprite.spritecollide(bullet, level.enemies, False)
+    def update_fireballs(self, level, vel_x=None):
+        for fireball in self.fireballs:
+            # Skip fireballs that have already collided
+            if not fireball.hit:
+                collisions = pygame.sprite.spritecollide(fireball, level.enemies, False)
                 for collision in collisions:
+                    # Skip enemies that are already dead (playing death animation)
                     if not collision.hit:
+                        self.player_score.enemy_hit()
                         play_sound(self.enemy_kill_sound)
                         collision.hit_sequence()
-                        bullet.hit_sequence()
-            bullet.update(level, self.is_scrolling, vel_x)
+                        fireball.hit_sequence()
+            # Moves fireball position
+            fireball.update(level, self.is_scrolling, vel_x)
 
     def check_pipe(self):
         """Checks if it is an underground pipe."""
@@ -288,7 +292,7 @@ class Mario(Entity):
         elif self.rect.y > self.settings.screen_height and not self.dead:
             play_music(self.dead_music)
             self.switch_bg_music = False
-            self.died()
+            self.died(False)
 
         # Falling death movement
         if self.dead:
@@ -297,9 +301,9 @@ class Mario(Entity):
             return
 
         if self.running:
-            self.update_fire_balls(level, -self.velocity.x)
+            self.update_fireballs(level, -self.velocity.x)
         else:
-            self.update_fire_balls(level)
+            self.update_fireballs(level)
 
         # Freeze Mario on taking damage
         if self.hit:
@@ -382,10 +386,7 @@ class Mario(Entity):
                 if self.invincible or (self.rect.bottom <= collision.rect.centery):
                     play_sound(self.enemy_kill_sound)
                     collision.hit_sequence()
-                    if collision.type == "koopa":
-                        self.player_score.koopa_hit()
-                    if collision.type == "goomba":
-                        self.player_score.goomba_hit()
+                    self.player_score.enemy_hit()
                     if not self.invincible:
                         self.rect.bottom = collision.rect.top
                         self.is_jumping = True  # Prevent jumping after bounce
@@ -403,7 +404,7 @@ class Mario(Entity):
                             self.go_down_state()
 
     def check_item_collisions(self, level):
-        """Detect if touched power-up."""
+        """Detect if touched an item."""
         collisions = pygame.sprite.spritecollide(self, level.items, True)
         for collision in collisions:
             if collision.item_type == 1:
@@ -420,23 +421,25 @@ class Mario(Entity):
                 self.get_star()
 
     def get_bigger(self):
-        self.player_score.mushroom_hit()
-        self.state = "big"
-        self.load_state()
-        self.animation_time = now()
-        self.bigger_animation.reset()
-        self.animating = True
+        self.player_score.power_up_hit()
+        if not self.state == "big":
+            self.state = "big"
+            self.load_state()
+            self.animation_time = now()
+            self.bigger_animation.reset()
+            self.animating = True
 
     def get_fire(self):
-        self.player_score.fire_flower_hit()
-        self.state = "fire"
-        self.load_state()
-        self.animation_time = now()
-        self.fire_animation.reset()
-        self.animating = True
+        self.player_score.power_up_hit()
+        if not self.state == "fire":
+            self.state = "fire"
+            self.load_state()
+            self.animation_time = now()
+            self.fire_animation.reset()
+            self.animating = True
 
     def get_star(self):
-        self.player_score.star_hit()
+        self.player_score.power_up_hit()
         play_music(self.star_music, True)
         self.invincible = True
         self.invincible_time = now()
@@ -569,11 +572,13 @@ class Mario(Entity):
         # Parent draw() actually blits the image
         super().draw()
 
-    def died(self):
+    def died(self, jump=True):
+        """Sets Mario to death state to draw death animation."""
         self.moving_left = False
         self.moving_right = False
         self.is_scrolling = False
-        self.jump()
         self.dead = True
         self.lifes.lifes -= 1
         self.death_time = now()
+        if jump:
+            self.jump()

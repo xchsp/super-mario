@@ -2,6 +2,7 @@ import pygame
 
 
 class ScoreSystem:
+    """Keeps track of the points Mario has accumulated."""
 
     def __init__(self, screen):
         self.screen = screen
@@ -13,58 +14,26 @@ class ScoreSystem:
         self.lives = 3
         self.coin_counter = 0
 
-        # Score values
-        self.coin = 200
-        self.goomba = 10
-        self.koopa = 20
-        self.mushroom = 1000
-        self.fire_flower = 1000
-        self.star = 1000
-
-        # Maximum flag score
-        self.flag_lower = 40
-        self.flag_middle = 80
-        self.flag_upper = 200
-        self.flag_heigth = 460
+        # Point values
+        self.enemy_points = 100
+        self.coin_points = 200
+        self.power_up_points = 1000
 
         # Player score
         self.score = 0
 
-    def flag_score(self, mario, level_over):
-        if not level_over:
-            # Upper score
-            if mario.rect.y in range(100, 268):
-                self.score += self.flag_upper
-            
-            # Middle score
-            elif mario.rect.y in range(267, 435):
-                self.score += self.flag_middle            
-            
-            # Lower score, Mario can just walk across
-            else:
-                self.score += self.flag_lower
-
-    def goomba_hit(self):
-        self.score += self.goomba
-
-    def koopa_hit(self):
-        self.score += self.koopa
+    def enemy_hit(self):
+        self.score += self.enemy_points
 
     def coin_hit(self, mario):
+        self.score += self.coin_points
         self.coin_counter += 1
         if self.coin_counter == 10:
             mario.lifes.lifes += 1
             self.coin_counter = 0
-        self.score += self.coin
 
-    def mushroom_hit(self):
-        self.score += self.mushroom
-
-    def fire_flower_hit(self):
-        self.score += self.fire_flower
-
-    def star_hit(self):
-        self.score += self.star
+    def power_up_hit(self):
+        self.score += self.power_up_points
 
     def draw(self, underground):
         if underground:

@@ -142,8 +142,9 @@ class Level:
         # Bricks
         for x in range(self.data["brick"]["count"]):
             position = self.data["brick"]["position"][x]
+            image = self.data["brick"]["image"]
             has_item = self.data["brick"]["item"][x]
-            block = Brick(self.settings, self.screen, position, self, self.re_entry, has_item)
+            block = Brick(self.settings, self.screen, image, position, self, self.re_entry, has_item)
             blocks.add(block)
 
         # Dead blocks

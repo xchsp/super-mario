@@ -8,10 +8,8 @@ from library.items.star import Star
 class Brick(Block):
     """Bounces when hit by player."""
 
-    def __init__(self, settings, screen, position, level, re_entry, has_item):
-        super(Brick, self).__init__(settings, screen,
-                                    "resources/images/brick.png", position,
-                                    level, re_entry, has_item)
+    def __init__(self, settings, screen, position, image_name, level, re_entry, has_item):
+        super(Brick, self).__init__(settings, screen, position, image_name, level, re_entry, has_item)
         self.type = "brick"
         self.coins = 5
 

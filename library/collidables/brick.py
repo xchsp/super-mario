@@ -2,6 +2,7 @@ import pygame
 
 from library.collidables.block import Block
 from library.entities.items.coin import Coin
+from library.entities.items.mushroom import Mushroom
 from library.entities.items.star import Star
 
 
@@ -26,6 +27,10 @@ class Brick(Block):
                 self.has_item = 0
                 self.image = self.empty_image
                 self.type = "block"
+        elif self.has_item == 2:
+            self.has_item = 0
+            self.type = "block"
+            self.level.items.add(Mushroom(self.settings, self.screen, self.rect.topleft))
         elif self.has_item == 4:
             self.has_item = 0
             self.type = "block"

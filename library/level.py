@@ -54,11 +54,20 @@ class Level:
         self.enemies.empty()
         self.re_entry = 0
 
+        self.items = self.load_items()
         self.blocks = self.load_blocks()
         self.terrain = self.load_terrain()
         self.terrain.add(self.blocks)
         self.enemies = self.load_enemies()
         self.background = Background(self.settings, self.screen, self.data["background"]["image"])
+
+    def load_items(self):
+        items = Group()
+        for x in range(self.data["coins"]["count"]):
+            position = self.data["coins"]["position"][x]
+            coin = Coin(self.settings, self.screen, position, True)
+            items.add(coin)
+        return items
 
     def load_terrain(self):
         """Loads terrain sprites."""
@@ -226,9 +235,9 @@ class Level:
                 item.draw()
             self.exit_pipe.draw()
         else:
-            for item in self.items.sprites():
-                item.draw()
             for ground in self.terrain.sprites():
                 ground.draw()
             for enemy in self.enemies.sprites():
                 enemy.draw()
+            for item in self.items.sprites():
+                item.draw()

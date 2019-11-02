@@ -11,11 +11,15 @@
     },
 
 
+    "coins" : {
+        "count" : 0
+    },
+
     "brick": {
         "image" : "resources/images/brick.png",
         "count" : 30,
         "position" : [[960, 408],[1054, 408], [1148, 408], [3698, 408], [3792, 408], [3840, 216], [3887, 216], [3934, 216], [3981, 216], [4028, 216], [4075, 216], [4122, 216], [4169, 216], [4368, 216], [4415, 216], [4462, 216], [4509, 408], [4801, 408], [4848, 408], [5663, 408], [5808, 216], [5855, 216], [5902, 216], [6144, 216], [6285, 216], [6191, 408], [6238, 408], [8063, 408], [8110, 408], [8204, 408]],
-        "item" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 4 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0]
+        "item" : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 4 , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     },
     "block" : {
         "image" : "resources/images/block.png",
@@ -77,7 +81,7 @@
         "background" : "resources/images/world1_1under_bg.png",
         "terrain": { 
             "count" : 5,
-            "position" : [[274, 400], [0, 0], [912, 0], [274, 0], [0, 542]],
+            "position" : [[274, 400], [0, 3], [912, 0], [274, 0], [0, 542]],
             "image" : ["resources/images/w1_1_bottombrick.png", "resources/images/w1_1_sidebrick.png", "resources/images/w1_1_u_pipeup.png", "resources/images/w1_1_u_topbrick.png", "resources/images/w1_1_u_ground.png"]
                     
         },

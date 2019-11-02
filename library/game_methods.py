@@ -66,11 +66,13 @@ def on_key_up(event, mario):
 def on_update(level, mario):
     """Handles positions and logic."""
     mario.update(level)
-    level.update(mario, mario.is_scrolling)
-    if mario.running:
-        level.update(mario, mario.is_scrolling, -mario.velocity.x)
-    else:
+    # Freeze updates while Mario has death animation/is respawning
+    if not mario.dead:
         level.update(mario, mario.is_scrolling)
+        if mario.running:
+            level.update(mario, mario.is_scrolling, -mario.velocity.x)
+        else:
+            level.update(mario, mario.is_scrolling)
 
 
 def on_draw(level, mario, game_time, player_score):

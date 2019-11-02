@@ -44,22 +44,26 @@ class Level:
 
         self.background = Background(settings, screen, self.data["background"]["image"])
 
-    def load(self, data):
+    def load(self, data, reset=False):
         with open(data) as data_f:
             self.data = json.load(data_f)
 
-        self.items.empty()
-        self.blocks.empty()
-        self.terrain.empty()
-        self.enemies.empty()
         self.re_entry = 0
 
-        self.items = self.load_items()
-        self.blocks = self.load_blocks()
-        self.terrain = self.load_terrain()
-        self.terrain.add(self.blocks)
-        self.enemies = self.load_enemies()
-        self.background = Background(self.settings, self.screen, self.data["background"]["image"])
+        # Clear old data, then add new data
+        if reset:
+            self.items.empty()
+            self.blocks.empty()
+            self.terrain.empty()
+            self.enemies.empty()
+
+            self.items = self.load_items()
+            self.blocks = self.load_blocks()
+            self.terrain = self.load_terrain()
+            self.terrain.add(self.blocks)
+            self.enemies = self.load_enemies()
+
+            self.background = Background(self.settings, self.screen, self.data["background"]["image"])
 
     def load_items(self):
         items = Group()

@@ -12,4 +12,4 @@ class Star(Item):
         self.direction *= -1
 
     def on_vertical_collision(self):
-        self.velocity.y = -7
+        self.velocity.y = -6

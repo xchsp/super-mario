@@ -189,7 +189,7 @@ class Mario(Entity):
                 self.rect.right = collision.rect.left
             elif self.moving_left:
                 self.rect.left = collision.rect.right
-        # check for pipe if underground
+        # Check for pipe if underground
         if self.underground:
             if pygame.sprite.collide_rect(self, level.exit_pipe):
                 self.check_pipe_exit(level)
@@ -204,7 +204,7 @@ class Mario(Entity):
                     self.rect.top = collision.rect.bottom
                     self.velocity.y = 0
                     self.fall()
-                    # check for block collisions
+                    # Check for block collisions
                     try:
                         if collision.has_item != 0:
                             collision.show_item(self)
@@ -271,21 +271,25 @@ class Mario(Entity):
         # Actually moves Mario horizontally, if on left side of screen.
         # Otherwise, scroll screen to simulate movement
         if self.dead:
+            # Waited for death music/animation to finish playing
             if now() - self.death_time >= 2500:
                 self.dead = False
                 self.game_time.seconds = 350
 
+                # No more lives available, restart at level 1
+                # print(self.rect.topleft)
                 if self.lifes.lifes == 0:
+                    self.state = "small"
                     self.player_score.score = 0
-                    self.game_time.seconds = 350
                     self.lifes.lifes = 3
-                    level.load("resources/w1_1.json")
                     self.level_2 = False
+                    level.load("resources/w1_1.json", True)
+                # Resume gameplay at current level
                 elif self.level_2:
                     level.load("resources/w1_2.json")
                 else:
                     level.load("resources/w1_1.json")
-                self.position = (100, 0)
+                self.position = (50, 200)
                 super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]))
                 play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
         # Fell out of screen
@@ -300,6 +304,7 @@ class Mario(Entity):
             self.rect.y += self.velocity.y
             return
 
+        # Fireball movement
         if self.running:
             self.update_fireballs(level, -self.velocity.x)
         else:
@@ -336,12 +341,13 @@ class Mario(Entity):
             if self.rect.bottom <= 505:
                 self.pipe_up = False
         else:
-            # running
+            # Running increases scroll speed
             if self.running:
                 self.velocity.x = -self.settings.scroll_rate * 2
-            # resets scroll if not running
+            # Resets speed if not running
             else:
                 self.velocity.x = -self.settings.scroll_rate
+            # Disables scrolling underground
             if self.underground:
                 if self.moving_right:
                     self.rect.centerx += self.velocity.x
@@ -349,11 +355,11 @@ class Mario(Entity):
                 elif self.moving_left:
                     self.direction = -1
                     self.rect.x -= self.velocity.x
-            # end of level
+            # End of level
             elif self.settings.level_over:
                 self.castle_walk(level)
                 return
-            # normal stuff
+            # Regular movement
             elif self.moving_right:
                 self.direction = 1
                 if self.rect.centerx + self.velocity.x <= self.screen_rect.centerx:
@@ -371,9 +377,9 @@ class Mario(Entity):
             # Jumping, moves Mario vertically
             self.rect.y += self.velocity.y
             self.handle_vertical_collision(level)
-            # Check enemy collisions
+
+            # Entity collisions
             self.check_enemy_collisions(level)
-            # check item collisions
             self.check_item_collisions(level)
 
     def check_enemy_collisions(self, level):
@@ -484,7 +490,7 @@ class Mario(Entity):
                 self.moving_right = False
                 self.running = False
                 self.settings.level_over = False
-                level.load("resources/w1_2.json")
+                level.load("resources/w1_2.json", True)
                 self.switch_bg_music = False
                 self.level_2 = True
                 play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
@@ -526,6 +532,7 @@ class Mario(Entity):
         elif self.animating:
             self.moving_left = False
             self.moving_right = False
+            self.is_scrolling = False
             # Bigger Mario animation
             if self.state == "big" and now() - self.animation_time <= 800:
                 super().init_mario_image(self.bigger_animation.get_image())
@@ -574,6 +581,7 @@ class Mario(Entity):
 
     def died(self, jump=True):
         """Sets Mario to death state to draw death animation."""
+        self.state = "small"
         self.moving_left = False
         self.moving_right = False
         self.is_scrolling = False

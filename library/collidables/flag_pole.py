@@ -11,7 +11,7 @@ class FlagPole(Terrain):
         self.level = level
         self.mario = mario
         self.is_flag_pole = True
-        self.flag_image = pygame.image.load("resources/images/flag.png")
+        self.flag_image = pygame.image.load("resources/images/flag.png").convert()
         self.flag_rect = self.flag_image.get_rect()
         self.flag_rect.topleft = self.rect.x - 60, self.rect.y + 40
 

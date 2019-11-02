@@ -9,10 +9,13 @@ from library.entities.items.star import Star
 class Brick(Block):
     """Pops out coins when hit by player."""
 
-    def __init__(self, settings, screen, position, image_name, level, re_entry, has_item):
-        super(Brick, self).__init__(settings, screen, position, image_name, level, re_entry, has_item)
+    def __init__(self, settings, screen, image_name, position, level, re_entry, has_item):
+        super(Brick, self).__init__(settings, screen, image_name, position, level, re_entry, has_item)
+        self.broken_image = pygame.image.load(image_name[:-4] + "_broken.png").convert()
         self.type = "brick"
         self.coins = 5
+        self.destroy_time = 0
+        self.dead = False
 
     def show_item(self, mario):
         if self.has_item == 1 or self.has_item == 5:
@@ -42,4 +45,16 @@ class Brick(Block):
                 self.image = self.empty_image
                 self.type = "block"
         elif mario.state is not "small":
-            self.kill()
+            self.destroy()
+
+    def draw(self):
+        if self.dead:
+            if pygame.time.get_ticks() - self.destroy_time < 250:
+                self.image = self.broken_image
+            else:
+                super().destroy()
+        super().draw()
+
+    def destroy(self):
+        self.destroy_time = pygame.time.get_ticks()
+        self.dead = True

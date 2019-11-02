@@ -208,9 +208,11 @@ class Mario(Entity):
                     try:
                         if collision.has_item != 0:
                             collision.show_item(self)
-                        elif collision.has_item is 0 and self.state is not "small" and collision.type is "brick":
+                        elif (collision.has_item == 0 and self.state != "small"
+                                and collision.type == "brick" and not collision.dead):
+                            # Break block
                             play_sound(self.brick_break_sound)
-                            collision.kill()
+                            collision.destroy()
                     except AttributeError:
                         pass
                     break

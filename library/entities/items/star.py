@@ -8,5 +8,8 @@ class Star(Item):
         self.item_type = 4
         self.gravity = 0.25
 
+    def on_horizontal_collision(self):
+        self.direction *= -1
+
     def on_vertical_collision(self):
         self.velocity.y = -7

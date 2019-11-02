@@ -1,6 +1,6 @@
 from library.collidables.terrain import Terrain
 from library.entities.items.mushroom import Mushroom
-from library.entities.items.fireflower import FireFlower
+from library.entities.items.fire_flower import FireFlower
 from library.entities.items.coin import Coin
 
 import pygame.image

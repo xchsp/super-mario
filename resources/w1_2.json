@@ -77,7 +77,7 @@
 
     "castle" : {
         "image" : "resources/images/disney.png",
-        "position" : [7400, 273]
+        "position" : [7400, 274]
     },
 
     "pillar" : {

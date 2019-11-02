@@ -8,7 +8,7 @@ class Fireball(Entity):
 
     def __init__(self, settings, screen, position, direction):
         super().__init__(settings, screen, position, direction=direction)
-        super().init_image(pygame.image.load("resources/images/fireball.png").convert_alpha())
+        super().init_image(pygame.image.load("resources/images/fireball.png"))
         self.scroll_rate = settings.scroll_rate
         self.spin_animation = self.load_spin_animation()
         self.death_animation = self.load_death_animation()

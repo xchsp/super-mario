@@ -12,6 +12,7 @@ class Enemy(Entity):
         self.scroll_rate = settings.scroll_rate
         self.walk_animation = self.load_walk_animation(animation_speed)
         super().init_image(self.walk_animation.get_image())
+        self.death_delay = 1000
         self.gravity = settings.gravity * 0.1
         self.hit_image = None
 
@@ -24,14 +25,25 @@ class Enemy(Entity):
     def set_image(self, image):
         """Enemy image asset is typically facing left. Changed logic of direction."""
         self.image = image if self.direction == -1 else pygame.transform.flip(image, True, False)
-        
-    def draw(self):
-        if not self.hit:
-            self.set_image(self.walk_animation.get_image())
-        else:
-            self.set_image(self.hit_image)
-        super().draw()
 
     def on_horizontal_collision(self):
         """Face the opposite direction when hitting a wall."""
         self.direction *= -1
+
+    def draw(self):
+        if self.hit:
+            self.set_image(self.hit_image)
+            fade_image = self.image.copy()
+            time = pygame.time.get_ticks() - self.death_time
+            if time >= 500:
+                alpha = (1 - (time / self.death_delay)) * 255
+                if alpha > 0:
+                    # Fade death animation
+                    fade_image.fill((255, 255, 255, alpha), special_flags=pygame.BLEND_RGBA_MULT)
+                    self.screen.blit(fade_image, self.rect)
+            else:
+                # Regular death animation
+                super().draw()
+        else:
+            self.set_image(self.walk_animation.get_image())
+            super().draw()

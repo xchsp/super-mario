@@ -77,7 +77,7 @@ class Mario(Entity):
         self.still_image = self.jump_image = self.hit_image = self.crouch_image = None
 
         # Animated states
-        super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
+        super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]))
         self.load_state()
         self.bigger_animation = load_bigger_animation()
         self.fire_animation = load_fire_animation()
@@ -286,7 +286,7 @@ class Mario(Entity):
                 else:
                     level.load("resources/w1_1.json")
                 self.position = (100, 0)
-                super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
+                super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]))
                 play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
         # Fell out of screen
         elif self.rect.y > self.settings.screen_height and not self.dead:
@@ -318,7 +318,7 @@ class Mario(Entity):
                 self.pipe_down = False
                 # reposition
                 self.position = (100, -300)
-                super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
+                super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]))
                 level.create_underground()
         # Going into pipe from side animation
         elif self.pipe_side:
@@ -329,7 +329,7 @@ class Mario(Entity):
                 self.underground = False
                 self.position = (25, level.go_surface() + 80)
                 play_sound(self.pipe_sound)
-                super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
+                super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]))
         # Coming out of pipe animation
         elif self.pipe_up:
             self.rect.y -= 2
@@ -490,7 +490,7 @@ class Mario(Entity):
                 play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
                 self.game_time.seconds = 350
                 self.position = (100, -300)
-                super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]).convert_alpha())
+                super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]))
 
     def draw(self):
         # Fireballs

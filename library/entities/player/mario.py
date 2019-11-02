@@ -291,7 +291,8 @@ class Mario(Entity):
                     level.load("resources/w1_2.json")
                 else:
                     level.load("resources/w1_1.json")
-                self.position = (50, 200)
+                # Respawn location
+                self.position = (50, 350)
                 super().init_image(pygame.image.load(self.data[self.state]["walking"]["sequence"][3]))
                 play_music(self.bg_music_2 if self.level_2 else self.bg_music_1, True)
         # Fell out of screen

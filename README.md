@@ -8,6 +8,9 @@ Anisha Braganza
 Antonio Guzman  
 Gary Kam  
 
+## Rubric
+![rubric](resources/images/rubric.jpg)
+
 ## Credits
 Sprites - https://www.spriters-resource.com/nintendo_64/pm  
 Sounds - https://themushroomkingdom.net/media/smb/wav  
